@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -16,8 +18,13 @@ public class GameScreen implements Screen {
 	private SpriteBatch batch;	   
 	private BitmapFont font;
 	private Tarro tarro;
-	private Lluvia lluvia;
+	//private Lluvia lluvia;
+	private AmungusNormal amungusazul;
+	private AmungusTirador amungusrojo;
 
+	private ArrayList<Bullet> balas = new ArrayList<>();
+	private ArrayList<AmungusNormal> normales = new ArrayList<>();
+	private ArrayList<AmungusTirador> tiradores = new ArrayList<>();
 	   
 	//boolean activo = true;
 
@@ -26,17 +33,21 @@ public class GameScreen implements Screen {
         this.batch = game.getBatch();
         this.font = game.getFont();
 		  // load the images for the droplet and the bucket, 64x64 pixels each 	     
-		  Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
-		  tarro = new Tarro(new Texture(Gdx.files.internal("bucket.png")),hurtSound);
+		  Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("mute.mp3"));
+		  tarro = new Tarro(new Texture(Gdx.files.internal("cristiano small.png")),new Texture(Gdx.files.internal("bola cristiano.png")),hurtSound);
          
 	      // load the drop sound effect and the rain background "music" 
-         Texture gota = new Texture(Gdx.files.internal("drop.png"));
-         Texture gotaMala = new Texture(Gdx.files.internal("dropBad.png"));
+	     Texture gota = new Texture(Gdx.files.internal("amongus blue.png"));
+	     Texture gotaMala = new Texture(Gdx.files.internal("amongus tirador.png"));
+         Texture bala = new Texture(Gdx.files.internal("Rocket2.png"));
          
-         Sound dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
+         Sound dropSound = Gdx.audio.newSound(Gdx.files.internal("amogus kill sonido.mp3"));
+         Sound balaSound = Gdx.audio.newSound(Gdx.files.internal("cr7 siuuu sound.mp3"));
         
-	     Music rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
-         lluvia = new Lluvia(gota, gotaMala, dropSound, rainMusic);
+	     Music rainMusic = Gdx.audio.newMusic(Gdx.files.internal("amongus drip.mp3"));
+         //lluvia = new Lluvia(gota, gotaMala, dropSound, rainMusic);
+         amungusazul=new AmungusNormal(gota, dropSound, rainMusic);
+         amungusrojo=new AmungusTirador(gotaMala, dropSound, rainMusic,bala,balaSound);
 	      
 	      // camera
 	      camera = new OrthographicCamera();
@@ -46,7 +57,9 @@ public class GameScreen implements Screen {
 	      tarro.crear();
 	      
 	      // creacion de la lluvia
-	      lluvia.crear();
+	      //lluvia.crear();
+	      amungusrojo.Crear();
+	      amungusazul.Crear();
 	}
 
 	@Override
@@ -59,15 +72,21 @@ public class GameScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		//dibujar textos
-		font.draw(batch, "Gotas totales: " + tarro.getPuntos(), 5, 475);
+		font.draw(batch, "Amogus totales: " + tarro.getPuntos(), 5, 475);
 		font.draw(batch, "Vidas : " + tarro.getVidas(), 670, 475);
 		font.draw(batch, "HighScore : " + game.getHigherScore(), camera.viewportWidth/2-50, 475);
 		
 		if (!tarro.estaHerido()) {
 			// movimiento del tarro desde teclado
-	        tarro.actualizarMovimiento();        
+	        tarro.actualizarMovimiento();
+	        for (Bullet b : balas) {       
+		          if(!b.isDestroyed())
+		          {
+		        	  b.update();
+		          }
+		    }
 			// caida de la lluvia 
-	       if (!lluvia.actualizarMovimiento(tarro)) {
+	       if (!amungusrojo.actualizarMovimiento(tarro)) {
 	    	  //actualizar HigherScore
 	    	  if (game.getHigherScore()<tarro.getPuntos())
 	    		  game.setHigherScore(tarro.getPuntos());  
@@ -75,10 +94,28 @@ public class GameScreen implements Screen {
 	    	  game.setScreen(new GameOverScreen(game));
 	    	  dispose();
 	       }
+	       if (!amungusazul.actualizarMovimiento(tarro)) {
+		    	  //actualizar HigherScore
+		    	  if (game.getHigherScore()<tarro.getPuntos())
+		    		  game.setHigherScore(tarro.getPuntos());  
+		    	  //ir a la ventana de finde juego y destruir la actual
+		    	  game.setScreen(new GameOverScreen(game));
+		    	  dispose();
+		   }
 		}
 		
-		tarro.dibujar(batch);
-		lluvia.actualizarDibujoLluvia(batch);
+		for (Bullet b : balas) {       
+	          if(!b.isDestroyed())
+	          {
+	        	  b.draw(batch);
+	          }
+	    }
+		
+		tarro.dibujar(batch, this);
+		
+		amungusrojo.actualizarDibujoamungus(batch);
+		amungusazul.actualizarDibujoamungus(batch);
+		
 		
 		batch.end();
 	}
@@ -87,10 +124,15 @@ public class GameScreen implements Screen {
 	public void resize(int width, int height) {
 	}
 
+	public boolean agregarBala(Bullet bb) {
+    	return balas.add(bb);
+    }
+	
 	@Override
 	public void show() {
 	  // continuar con sonido de lluvia
-	  lluvia.continuar();
+		amungusazul.continuar();
+		amungusrojo.continuar();
 	}
 
 	@Override
@@ -100,7 +142,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void pause() {
-		lluvia.pausar();
+		amungusazul.pausar();
+		amungusrojo.pausar();
 		game.setScreen(new PausaScreen(game, this)); 
 	}
 
@@ -111,8 +154,9 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-      tarro.destruir();
-      lluvia.destruir();
+		tarro.destruir();
+	      amungusazul.destruir();
+	      amungusrojo.destruir();
 
 	}
 
