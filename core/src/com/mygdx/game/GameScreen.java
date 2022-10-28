@@ -86,7 +86,7 @@ public class GameScreen implements Screen {
 		          }
 		    }
 			// caida de la lluvia 
-	       if (!amungusrojo.actualizarMovimiento(tarro)) {
+	       if (!amungusrojo.actualizarMovimiento(tarro, balas)) {
 	    	  //actualizar HigherScore
 	    	  if (game.getHigherScore()<tarro.getPuntos())
 	    		  game.setHigherScore(tarro.getPuntos());  

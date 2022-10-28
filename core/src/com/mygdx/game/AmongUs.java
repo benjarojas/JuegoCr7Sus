@@ -1,6 +1,8 @@
 package com.mygdx.game;
 
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -34,7 +36,8 @@ public abstract class AmongUs {
      public void continuar() {
     	 AmongDrip.play();
      }	
-     public abstract boolean actualizarMovimiento(Tarro tarro);
+     //public abstract boolean actualizarMovimiento(Tarro tarro);
+     //public abstract boolean actualizarMovimiento(Tarro tarro, ArrayList<Bullet> balas);
      public abstract void actualizarDibujoamungus(SpriteBatch batch);
      
      
