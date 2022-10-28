@@ -72,7 +72,7 @@ public class GameScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		//dibujar textos
-		font.draw(batch, "Amogus totales: " + tarro.getPuntos(), 5, 475);
+		font.draw(batch, "AmongPuntos: " + (amungusrojo.getPuntos()+amungusazul.getPuntos()), 5, 475);
 		font.draw(batch, "Vidas : " + tarro.getVidas(), 670, 475);
 		font.draw(batch, "HighScore : " + game.getHigherScore(), camera.viewportWidth/2-50, 475);
 		
@@ -85,19 +85,18 @@ public class GameScreen implements Screen {
 		        	  b.update();
 		          }
 		    }
-			// caida de la lluvia 
-	       if (!amungusrojo.actualizarMovimiento(tarro, balas)) {
+			// caida de amongus
+	       if (!amungusrojo.actualizarMovimiento(tarro,balas)) {
 	    	  //actualizar HigherScore
-	    	  if (game.getHigherScore()<tarro.getPuntos())
-	    		  game.setHigherScore(tarro.getPuntos());  
+	    	  if (game.getHigherScore()<amungusrojo.getPuntos())
+	    		  game.setHigherScore(amungusrojo.getPuntos()+amungusazul.getPuntos());  
 	    	  //ir a la ventana de finde juego y destruir la actual
 	    	  game.setScreen(new GameOverScreen(game));
 	    	  dispose();
-	       }
-	       if (!amungusazul.actualizarMovimiento(tarro)) {
+	       } 
+	       if (!amungusazul.actualizarMovimiento(tarro,balas)) {
 		    	  //actualizar HigherScore
-		    	  if (game.getHigherScore()<tarro.getPuntos())
-		    		  game.setHigherScore(tarro.getPuntos());  
+		    	  
 		    	  //ir a la ventana de finde juego y destruir la actual
 		    	  game.setScreen(new GameOverScreen(game));
 		    	  dispose();

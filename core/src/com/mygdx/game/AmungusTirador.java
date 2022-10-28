@@ -16,10 +16,10 @@ public class AmungusTirador extends AmongUs {
 	private Array<Rectangle> posAmong;
 	private long ultimoAmong;
 	private Sound tiroBala;
-	private long ultimaBala;
 	private Array<Rectangle> posBala;
 	private Texture texBala;
 	private Array<Rectangle> posBala2;
+	private int puntos=0;
 
 	public AmungusTirador(Texture AmongUsColor,Sound cc,Music ll,Texture bala,Sound oo)
 	{
@@ -38,6 +38,10 @@ public class AmungusTirador extends AmongUs {
 		AmongDrip.play();
 		
 		
+	}
+	public int getPuntos()
+	{
+		return puntos;
 	}
 	public void CrearAmongus()
 	{
@@ -63,37 +67,86 @@ public class AmungusTirador extends AmongUs {
 	    posBala.add(newbala);
 	    posBala2.add(newbala2);
 	    ultimoAmong=TimeUtils.millis();
-	    ultimaBala=TimeUtils.millis();
+	    
 		
 	}
 
-	public boolean actualizarMovimiento(Tarro tarro, ArrayList<Bullet> balas)
+	public boolean actualizarMovimiento(Tarro tarro,ArrayList<Bullet> balas)
 	{
 		if(TimeUtils.millis() - ultimoAmong > 5000) CrearAmongus();
+		for(int j=0; j < posBala2.size; j++ )
+		 {
+			 Rectangle bala2 = posBala2.get(j);
+			 bala2.y -= 100 * Gdx.graphics.getDeltaTime();
+			 if(bala2.y + 64 < 0) {
+		    	  posBala2.removeIndex(j);
+		      }
+			 if(bala2.overlaps(tarro.getArea())) {
+		    	  tarro.dañar();
+		    	  puntos-=50;
+		    	  if (tarro.getVidas()<=0)
+		    		 return false; // si se queda sin vidas retorna falso /game over
+		    	  posBala2.removeIndex(j);
+		    	  
+		      }
 		
-		 for (int i=0; i < posAmong.size; i++ ) {
+		 }
+		 for(int k=0; k < posBala.size; k++ )
+		 {
+			 Rectangle bala1 = posBala.get(k);
+			 bala1.y -= 70 * Gdx.graphics.getDeltaTime();
+			 if(bala1.y + 64 < 0) {
+		    	  posBala.removeIndex(k);
+		      }
+			 if(bala1.overlaps(tarro.getArea())) {
+		    	  tarro.dañar();
+		    	  puntos-=50;
+		    	  if (tarro.getVidas()<=0)
+		    		 return false; // si se queda sin vidas retorna falso /game over
+		    	  posBala.removeIndex(k);
+		    	  
+		      }
+			 
+		 }
+		
+		 for (int i=0; i < posAmong.size; i++ )
+		 {
 			  Rectangle among = posAmong.get(i);
 			  
 		      among.y -= 50 * Gdx.graphics.getDeltaTime();//velocidad de caida
 		      //velocidad de caida
 		      //cae al suelo y se elimina
 		      if(among.y + 64 < 0) {
-		    	  //tarro.dañar();
+		    	  tarro.dañar();
+		    	  puntos-=50;
 		    	  if (tarro.getVidas()<=0)
 			    		 return false;
 		    	  posAmong.removeIndex(i); 
+		    	  continue;
 		      }
 		      
 		      
 		   
 		      if(among.overlaps(tarro.getArea())) {
 		    	  tarro.dañar();
+		    	  puntos-=50;
 		    	  if (tarro.getVidas()<=0)
 		    		 return false; // si se queda sin vidas retorna falso /game over
 		    	  posAmong.removeIndex(i);
-		    	  
+		    	  continue;
+  
 		      }
-		    
+		      for(int n=0;n<balas.size();n++)
+		      {
+		    	  
+		    	   Bullet balaAux = balas.get(n);
+		    	   if(among.overlaps(balaAux.getArea())) {
+		    		   	  puntos+=300;	
+				    	  posAmong.removeIndex(i);
+				    	  KillAmong.play();
+				    	  balas.remove(n);
+		      }
+		     
 		      
 		      
 		      
@@ -101,43 +154,30 @@ public class AmungusTirador extends AmongUs {
 		    	  
 		      
 		 }
-		 for(int i=0; i < posBala.size; i++ )
-		 {
-			 Rectangle bala1 = posBala.get(i);
-			 bala1.y -= 70 * Gdx.graphics.getDeltaTime();
-			 if(bala1.y + 64 < 0) {
-		    	  posBala.removeIndex(i);
-		      }
-			 if(bala1.overlaps(tarro.getArea())) {
-		    	  tarro.dañar();
-		    	  if (tarro.getVidas()<=0)
-		    		 return false; // si se queda sin vidas retorna falso /game over
-		    	  posBala.removeIndex(i);
-		    	  
-		      }
-			 
-		 }
-		 for(int i=0; i < posBala2.size; i++ )
-		 {
-			 Rectangle bala2 = posBala2.get(i);
-			 bala2.y -= 100 * Gdx.graphics.getDeltaTime();
-			 if(bala2.y + 64 < 0) {
-		    	  posBala2.removeIndex(i);
-		      }
-			 if(bala2.overlaps(tarro.getArea())) {
-		    	  tarro.dañar();
-		    	  if (tarro.getVidas()<=0)
-		    		 return false; // si se queda sin vidas retorna falso /game over
-		    	  posBala2.removeIndex(i);
-		    	  
-		      }
-			 
+		
+		 
 		 }
 		      
 		return true;
 	}
 	public void actualizarDibujoamungus(SpriteBatch batch) {
 		
+		 for (int i=0; i < posBala.size; i++ ) {
+			  Rectangle raindrop = posBala.get(i);
+			  
+		      //batch.draw(AmongUsColor, raindrop.x, raindrop.y);
+		      batch.draw(texBala, raindrop.x, raindrop.y); 
+		      
+
+		   }
+		  for (int i=0; i < posBala2.size; i++ ) {
+			  Rectangle raindrop = posBala2.get(i);
+			  
+		      //batch.draw(AmongUsColor, raindrop.x, raindrop.y);
+		      batch.draw(texBala, raindrop.x, raindrop.y); 
+		      
+
+		   }
 		
 		  for (int i=0; i < posAmong.size; i++ ) {
 			  Rectangle raindrop = posAmong.get(i);
@@ -146,22 +186,7 @@ public class AmungusTirador extends AmongUs {
 		      //batch.draw(texBala, raindrop.x, raindrop.y); 
  
 		   }
-		  for (int i=0; i < posBala.size; i++ ) {
-			  Rectangle raindrop = posBala.get(i);
-			  
-		      //batch.draw(AmongUsColor, raindrop.x, raindrop.y);
-		      batch.draw(texBala, raindrop.x, raindrop.y); 
-		      
- 
-		   }
-		  for (int i=0; i < posBala2.size; i++ ) {
-			  Rectangle raindrop = posBala2.get(i);
-			  
-		      //batch.draw(AmongUsColor, raindrop.x, raindrop.y);
-		      batch.draw(texBala, raindrop.x, raindrop.y); 
-		      
- 
-		   }
+		 
 
 
 		 

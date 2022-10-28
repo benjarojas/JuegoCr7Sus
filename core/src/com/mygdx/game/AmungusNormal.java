@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -13,6 +15,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class AmungusNormal extends AmongUs {
 	private Array<Rectangle> posAmong;
 	private long ultimoAmong;
+	private int puntos=0;
 
 	public AmungusNormal(Texture AmongUsColor,Sound cc,Music ll)
 	{
@@ -27,6 +30,10 @@ public class AmungusNormal extends AmongUs {
 		
 		
 	}
+	public int getPuntos()
+	{
+		return puntos;
+	}
 	public void CrearAmongus()
 	{
 		Rectangle newAmong = new Rectangle();
@@ -40,16 +47,17 @@ public class AmungusNormal extends AmongUs {
 		
 	}
 
-	public boolean actualizarMovimiento(Tarro tarro)
+	public boolean actualizarMovimiento(Tarro tarro,ArrayList<Bullet> balas)
 	{
-		if(TimeUtils.millis() - ultimoAmong > 10000) CrearAmongus();
+		if(TimeUtils.millis() - ultimoAmong > 1000) CrearAmongus();
 		
 		 for (int i=0; i < posAmong.size; i++ ) {
 			  Rectangle among = posAmong.get(i);
 		      among.y -= 100 * Gdx.graphics.getDeltaTime();//velocidad de caida
 		      //cae al suelo y se elimina
 		      if(among.y + 64 < 0) {
-		    	  //tarro.dañar();
+		    	  tarro.dañar();
+		    	  puntos-=50;
 		    	  if (tarro.getVidas()<=0)
 			    		 return false;
 		    	  posAmong.removeIndex(i); 
@@ -57,15 +65,26 @@ public class AmungusNormal extends AmongUs {
 		      }
 		      if(among.overlaps(tarro.getArea())) {
 		    	  tarro.dañar();
+		    	  puntos-=50;
 		    	  if (tarro.getVidas()<=0)
 		    		 return false; // si se queda sin vidas retorna falso /game over
 		    	  posAmong.removeIndex(i);
 		    	  
 		      }
+		      for(int n=0;n<balas.size();n++)
+		      {
+		    	  
+		    	   Bullet balaAux = balas.get(n);
+		    	   if(among.overlaps(balaAux.getArea())) {
+		    		   	  puntos+=100;
+				    	  posAmong.removeIndex(i);
+				    	  KillAmong.play();
+				    	  balas.remove(n);
+		      }
 		    	  
 		      
 		 }    
-		      
+		 }     
 		return true;
 	}
 	public void actualizarDibujoamungus(SpriteBatch batch) {

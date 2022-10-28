@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 
-public class Tarro {
+public class Tarro implements Cristiano{
 	   private Rectangle bucket;
 	   private Sprite spr;
 	   private Texture bucketImage;
