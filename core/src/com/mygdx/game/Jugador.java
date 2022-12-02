@@ -10,9 +10,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 
-import StrategyCr7.Bullet;
-import StrategyCr7.Cr7PoderSiu;
-import StrategyCr7.StrategyProyectil;
+import templateMethod.Bullet;
+import templateMethod.Cr7PoderSiu;
+import templateMethod.Proyectil;
+import templateMethod.StrategyProyectil;
+
 
 
 public class Jugador {
@@ -31,6 +33,7 @@ public class Jugador {
 	   private Sound Siuuuuuu;
 	   private long ultimaBala;
 	   private long cooldownDisparo;
+	   private int puntosPotenciador;
 	   
 	   
 	   
@@ -73,9 +76,17 @@ public class Jugador {
 		  tiempoHerido=tiempoHeridoMax;
 		  sonidoHerido.play();
 	   }
+	   public void curar()
+	   {
+		   vidas++;
+	   }
+	   public void setPuntosPotenciador(int puntosPoder)
+	   {
+		   puntosPotenciador=puntosPoder;
+	   }
 	   
 	   public void dibujar(SpriteBatch batch, GameScreen game,AmungusNormal b) {
-		   StrategyProyectil stra= new StrategyProyectil();//Strategy 
+		   Proyectil stra;//Strategy 
 		   if (!herido)  
 			   batch.draw(playerImg, cristiano.x, cristiano.y);
 		   else {
@@ -83,7 +94,13 @@ public class Jugador {
 		       tiempoHerido--;
 		       if (tiempoHerido<=0) herido = false;
 		   }
+		   if(puntosPotenciador==5)
+		   {
+			   b.setPuntosPoder(5);
+		   }
+		   
 		   if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {   
+			   
 			   
 			   //Bullet bala = new Bullet(cristiano.getX()+cristiano.getWidth()/2-3,cristiano.getY()+ cristiano.getHeight()-3,0,3,bulletTx);
 			   //game.agregarBala(bala);
@@ -93,23 +110,29 @@ public class Jugador {
 			   // para evitar spameo de disparos
 			   if(TimeUtils.millis() - ultimaBala >= cooldownDisparo)
 			   {
-				   stra.setProyectil(new Bullet(cristiano.getX()+cristiano.getWidth()/2-3,cristiano.getY()+ cristiano.getHeight()-3,0,3,bulletTx));
-				   game.agregarBala(stra.tipoBala());
+				   stra=new Cr7PoderSiu();
+				   stra.CrearProyectil(bulletTx, cristiano.getX()+cristiano.getWidth()/2-3, cristiano.getY()+ cristiano.getHeight()-3, 0, 3, 1);
+				   //stra.setProyectil(new Bullet(cristiano.getX()+cristiano.getWidth()/2-3,cristiano.getY()+ cristiano.getHeight()-3,0,3,bulletTx));
+				   game.agregarBala(stra);
 				   ultimaBala = TimeUtils.millis();
 			   }
 			   
 			   //soundBala.play();
 		   }
 		   //condicion nueva, si apreta z se activa poder especial si este es igual a 5
-		   if (Gdx.input.isKeyJustPressed(Input.Keys.Z) && b.getPuntosPoder()==5) {  
-			   
-			   stra.setProyectil(new Cr7PoderSiu(cristiano.getX()+cristiano.getWidth()/2-45,cristiano.getY()+ cristiano.getHeight()-3,0,3,PoderCr7));
+		   if ((Gdx.input.isKeyJustPressed(Input.Keys.Z) && b.getPuntosPoder()==5) || ((Gdx.input.isKeyJustPressed(Input.Keys.Z) && puntosPotenciador==5))) {  
+			   //b.setPuntosPoder(5);
+			   stra=new Cr7PoderSiu();
+			   stra.CrearProyectil(PoderCr7, cristiano.getX()+cristiano.getWidth()/2-70, cristiano.getY()+ cristiano.getHeight()-3, 0, 3, 0);
+			   //stra.setProyectil(new Cr7PoderSiu(cristiano.getX()+cristiano.getWidth()/2-70,cristiano.getY()+ cristiano.getHeight()-3,0,3,PoderCr7));
 			   //stra.setProyectil(new Bullet(cristiano.getX()+cristiano.getWidth()/2-3,cristiano.getY()+ cristiano.getHeight()-3,0,3,bulletTx));
-			   game.agregarBala(stra.tipoBala());
+			   game.agregarBala(stra);
 			   Siuuuuuu.play();
 			   b.setPuntosPoder(0);//resetea el contador de poderCr7 de la clase amungusnormal 
+			   puntosPotenciador=0;
 			   //soundBala.play();
 		   }
+		   
 	   } 
 	   
 	   

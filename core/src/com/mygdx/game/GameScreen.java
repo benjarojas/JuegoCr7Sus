@@ -12,8 +12,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import StrategyCr7.Bullet;
-import StrategyCr7.Proyectil;
+import strategyPotenciadores.Carga;
+import strategyPotenciadores.Potenciador;
+import strategyPotenciadores.StrategyPotenciador;
+import strategyPotenciadores.VidaExtra;
+import templateMethod.Proyectil;
 
 public class GameScreen extends Pantalla implements Screen {
 	final JuegoCr7 game;
@@ -21,18 +24,13 @@ public class GameScreen extends Pantalla implements Screen {
 	private SpriteBatch batch;	   
 	private BitmapFont font;
 	private Jugador tarro;
-	//private Lluvia lluvia;
 	private AmungusNormal amungusazul;
 	private AmungusTirador amungusrojo;
-
-	//private ArrayList<Bullet> balas = new ArrayList<>();
-	private ArrayList<AmungusNormal> normales = new ArrayList<>();
-	private ArrayList<AmungusTirador> tiradores = new ArrayList<>();
-	private ArrayList<Bullet> balonDeOro = new ArrayList<>();
+	private StrategyPotenciador potenciador;
 	private ArrayList<Proyectil> balas = new ArrayList<>();
+	
 	   
-	//boolean activo = true;
-
+	
 	public GameScreen(final JuegoCr7 game) {
 		this.game = game;
         this.batch = game.getBatch();
@@ -46,22 +44,40 @@ public class GameScreen extends Pantalla implements Screen {
 	     Texture gota = new Texture(Gdx.files.internal("amongus blue.png"));
 	     Texture gotaMala = new Texture(Gdx.files.internal("amongus tirador.png"));
          Texture bala = new Texture(Gdx.files.internal("Rocket2.png"));
+         Texture vida = new Texture(Gdx.files.internal("corazon.png"));
+         Texture Carga = new Texture(Gdx.files.internal("png-transparent-ballon-d-or-2017-ballon-d-or-2016-2018-world-cup-2014-fifa-ballon-d-or-2015-fifa-ballon-d-or-football-removebg-preview (1).png"));
          
          Sound dropSound = Gdx.audio.newSound(Gdx.files.internal("amogus kill sonido.mp3"));
          Sound balaSound = Gdx.audio.newSound(Gdx.files.internal("cr7 siuuu sound.mp3"));
         
 	     Music rainMusic = Gdx.audio.newMusic(Gdx.files.internal("amongus drip.mp3"));
 	     Music muchasGraciasAficion = Gdx.audio.newMusic(Gdx.files.internal("cr7 gracias sound.mp3"));
-       
+      
          amungusazul=new AmungusNormal(gota, dropSound, rainMusic,muchasGraciasAficion);
          amungusrojo=new AmungusTirador(gotaMala, dropSound, rainMusic,bala,balaSound);
+         potenciador=new StrategyPotenciador();
+         
+         int n=(int) (Math.random()*2+1);
+         if(n==1)
+         {
+        	potenciador.setPotenciador(new VidaExtra(vida));
+   	      	potenciador.Crear();
+        	 
+         }
+         
+         else
+         {
+        	potenciador.setPotenciador(new Carga(Carga));
+   	      	potenciador.Crear();
+        	 
+         }
 	      
-	      // camera
 	      camera = new OrthographicCamera();
 	      camera.setToOrtho(false, 800, 480);
 	      batch = new SpriteBatch();
 	      // creacion de CR7
 	      tarro.crear();
+	      
 	      
 	      // creacion enemigos among us
 	      
@@ -109,6 +125,13 @@ public class GameScreen extends Pantalla implements Screen {
 		    	  game.setScreen(new GameOverScreen(game));
 		    	  dispose();
 		   }
+	       if (!potenciador.actualizarMovimiento(tarro,balas)) {
+		    	  //actualizar HigherScore
+		    	  
+		    	  //ir a la ventana de finde juego y destruir la actual
+		    	  game.setScreen(new GameOverScreen(game));
+		    	  dispose();
+		   }
 		}
 		
 		for (Proyectil b : balas) { //cambio de bullet a interfaz Proyectil   
@@ -122,6 +145,7 @@ public class GameScreen extends Pantalla implements Screen {
 		
 		amungusrojo.actualizarDibujoamungus(batch);
 		amungusazul.actualizarDibujoamungus(batch);
+		potenciador.actualizarDibujoPotenciador(batch);
 		
 		
 		batch.end();

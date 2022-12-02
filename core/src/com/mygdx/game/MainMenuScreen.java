@@ -14,16 +14,16 @@ public class MainMenuScreen extends Pantalla implements Screen {
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private OrthographicCamera camera;
-	private static MainMenuScreen mainmenu;
+	private static MainMenuScreen mainmenu;//agregar esto
 
-	private MainMenuScreen(final JuegoCr7 game) {
+	private MainMenuScreen(final JuegoCr7 game) {//private en vez de public
 		this.game = game;
         this.batch = game.getBatch();
         this.font = game.getFont();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 	}
-	
+	//todo este metodo
 	public static MainMenuScreen getSingletonInstance(final JuegoCr7 game)
 	{
 		if(mainmenu==null)

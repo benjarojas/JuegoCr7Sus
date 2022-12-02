@@ -13,9 +13,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 		public void create() {
 			batch = new SpriteBatch();
 			font = new BitmapFont(); // use libGDX's default Arial font
-			//this.setScreen(new MainMenuScreen(this));
 			this.setScreen(MainMenuScreen.getSingletonInstance(this));
-		}
+		}                                                             
 
 		public void render() {
 			super.render(); // important!

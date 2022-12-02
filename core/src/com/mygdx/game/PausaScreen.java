@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 
-public class PausaScreen implements Screen {
+public class PausaScreen extends Pantalla implements Screen {
 
 	private final JuegoCr7 game;
 	private GameScreen juego;

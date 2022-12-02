@@ -8,7 +8,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import StrategyCr7.Proyectil;
+import templateMethod.Proyectil;
 
 public abstract class AmongUs {
 	// pal abtrac private Array<Rectangle> posAmong;
