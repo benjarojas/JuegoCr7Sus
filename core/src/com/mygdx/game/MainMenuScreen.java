@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen extends Pantalla implements Screen {
 
 	final GameLluviaMenu game;
 	private SpriteBatch batch;

@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import StrategyCr7.Proyectil;
 
 public abstract class AmongUs {
 	// pal abtrac private Array<Rectangle> posAmong;
@@ -36,7 +37,7 @@ public abstract class AmongUs {
      public void continuar() {
     	 AmongDrip.play();
      }	
-     public abstract boolean actualizarMovimiento(Tarro tarro,ArrayList<Bullet> balas);
+     public abstract boolean actualizarMovimiento(Tarro tarro,ArrayList<Proyectil> balas);
      public abstract void actualizarDibujoamungus(SpriteBatch batch);
      
      

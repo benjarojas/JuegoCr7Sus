@@ -17,7 +17,7 @@ public interface Cristiano {
     public void sumarPuntos(int pp);
 	public void crear();
 	public void dañar();
-	public void dibujar(SpriteBatch batch, GameScreen game);
+	public void dibujar(SpriteBatch batch, GameScreen game,AmungusNormal b);//amungusNormal b es nuevo
 	public void actualizarMovimiento();
 	public void destruir();
     public boolean estaHerido();	   

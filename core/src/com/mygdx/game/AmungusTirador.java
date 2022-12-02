@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import StrategyCr7.Proyectil;
+
 public class AmungusTirador extends AmongUs {
 	private Array<Rectangle> posAmong;
 	private long ultimoAmong;
@@ -71,7 +73,7 @@ public class AmungusTirador extends AmongUs {
 		
 	}
 
-	public boolean actualizarMovimiento(Tarro tarro,ArrayList<Bullet> balas)
+	public boolean actualizarMovimiento(Tarro tarro,ArrayList<Proyectil> balas)
 	{
 		if(TimeUtils.millis() - ultimoAmong > 5000) CrearAmongus();
 		for(int j=0; j < posBala2.size; j++ )
@@ -139,17 +141,25 @@ public class AmungusTirador extends AmongUs {
 		      for(int n=0;n<balas.size();n++)
 		      {
 		    	  
-		    	   Bullet balaAux = balas.get(n);
+		    	   Proyectil balaAux = balas.get(n);
 		    	   if(among.overlaps(balaAux.getArea())) {
 		    		   	  puntos+=300;	
 				    	  posAmong.removeIndex(i);
 				    	  KillAmong.play();
-				    	  balas.remove(n);
+				    	  if(balaAux.hitBox())
+				    	  {
+				    		  balas.remove(n);
+				    		  
+				    	  }
+				    	  if(balaAux.posY()>300 && !balaAux.hitBox()) {
+				    		  balas.remove(n);}
+				    	  
+				    	  break;
 		      }
 		     
+		        
 		      
-		      
-		      
+		         
 		      
 		    	  
 		      

@@ -12,7 +12,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-public class GameScreen implements Screen {
+import StrategyCr7.Bullet;
+import StrategyCr7.Proyectil;
+
+public class GameScreen extends Pantalla implements Screen {
 	final GameLluviaMenu game;
     private OrthographicCamera camera;
 	private SpriteBatch batch;	   
@@ -22,9 +25,11 @@ public class GameScreen implements Screen {
 	private AmungusNormal amungusazul;
 	private AmungusTirador amungusrojo;
 
-	private ArrayList<Bullet> balas = new ArrayList<>();
+	//private ArrayList<Bullet> balas = new ArrayList<>();
 	private ArrayList<AmungusNormal> normales = new ArrayList<>();
 	private ArrayList<AmungusTirador> tiradores = new ArrayList<>();
+	private ArrayList<Bullet> balonDeOro = new ArrayList<>();
+	private ArrayList<Proyectil> balas = new ArrayList<>();
 	   
 	//boolean activo = true;
 
@@ -34,7 +39,8 @@ public class GameScreen implements Screen {
         this.font = game.getFont();
 		  // load the images for the droplet and the bucket, 64x64 pixels each 	     
 		  Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("mute.mp3"));
-		  tarro = new Tarro(new Texture(Gdx.files.internal("cristiano small.png")),new Texture(Gdx.files.internal("bola cristiano.png")),hurtSound);
+		  Sound siu = Gdx.audio.newSound(Gdx.files.internal("cr7 siuuu sound.mp3"));//sonido nuevo siu
+		  tarro = new Tarro(new Texture(Gdx.files.internal("cristiano small.png")),new Texture(Gdx.files.internal("bola cristiano.png")),hurtSound,new Texture(Gdx.files.internal("balonOroSinBordes.png")),siu);
          
 	      // load the drop sound effect and the rain background "music" 
 	     Texture gota = new Texture(Gdx.files.internal("amongus blue.png"));
@@ -45,19 +51,20 @@ public class GameScreen implements Screen {
          Sound balaSound = Gdx.audio.newSound(Gdx.files.internal("cr7 siuuu sound.mp3"));
         
 	     Music rainMusic = Gdx.audio.newMusic(Gdx.files.internal("amongus drip.mp3"));
-         //lluvia = new Lluvia(gota, gotaMala, dropSound, rainMusic);
-         amungusazul=new AmungusNormal(gota, dropSound, rainMusic);
+	     Music muchasGraciasAficion = Gdx.audio.newMusic(Gdx.files.internal("cr7 gracias sound.mp3"));
+       
+         amungusazul=new AmungusNormal(gota, dropSound, rainMusic,muchasGraciasAficion);
          amungusrojo=new AmungusTirador(gotaMala, dropSound, rainMusic,bala,balaSound);
 	      
 	      // camera
 	      camera = new OrthographicCamera();
 	      camera.setToOrtho(false, 800, 480);
 	      batch = new SpriteBatch();
-	      // creacion del tarro
+	      // creacion de CR7
 	      tarro.crear();
 	      
-	      // creacion de la lluvia
-	      //lluvia.crear();
+	      // creacion enemigos among us
+	      
 	      amungusrojo.Crear();
 	      amungusazul.Crear();
 	}
@@ -75,11 +82,12 @@ public class GameScreen implements Screen {
 		font.draw(batch, "AmongPuntos: " + (amungusrojo.getPuntos()+amungusazul.getPuntos()), 5, 475);
 		font.draw(batch, "Vidas : " + tarro.getVidas(), 670, 475);
 		font.draw(batch, "HighScore : " + game.getHigherScore(), camera.viewportWidth/2-50, 475);
+		font.draw(batch, "Carga del poder : " + (amungusazul.getPuntosPoderPorcentaje()), 2, 30);//muestra porcentaje del poder en pantalla
 		
 		if (!tarro.estaHerido()) {
 			// movimiento del tarro desde teclado
 	        tarro.actualizarMovimiento();
-	        for (Bullet b : balas) {       
+	        for (Proyectil b : balas) {       
 		          if(!b.isDestroyed())
 		          {
 		        	  b.update();
@@ -103,14 +111,14 @@ public class GameScreen implements Screen {
 		   }
 		}
 		
-		for (Bullet b : balas) {       
+		for (Proyectil b : balas) { //cambio de bullet a interfaz Proyectil   
 	          if(!b.isDestroyed())
 	          {
 	        	  b.draw(batch);
 	          }
 	    }
 		
-		tarro.dibujar(batch, this);
+		tarro.dibujar(batch, this,amungusazul);//instancia nueva amungusazul
 		
 		amungusrojo.actualizarDibujoamungus(batch);
 		amungusazul.actualizarDibujoamungus(batch);
@@ -123,7 +131,7 @@ public class GameScreen implements Screen {
 	public void resize(int width, int height) {
 	}
 
-	public boolean agregarBala(Bullet bb) {
+	public boolean agregarBala(Proyectil bb) {//cambio de clase bullet a interface Proyectil
     	return balas.add(bb);
     }
 	
