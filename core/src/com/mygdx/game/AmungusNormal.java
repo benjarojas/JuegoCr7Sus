@@ -97,6 +97,7 @@ public class AmungusNormal extends AmongUs {
 		    	  posAmong.removeIndex(i);
 		    	  
 		      }
+		      /*
 		      for(int n=0;n<balas.size();n++)
 		      {
 		    	  
@@ -106,7 +107,7 @@ public class AmungusNormal extends AmongUs {
 				    	  posAmong.removeIndex(i);
 				    	  KillAmong.play();
 				    	  
-				    	  //metodo nuevo interfaz amongUs
+				    	  //metodo nuevo clase amongUs
 				    	  //si tiene hitbox(True) es la clase bullet
 				    	  //si si hitbox retorna (false) es la clase podercr7siu por lo que la bala no se destruye
 				    	  if(balaAux.hitBox())
@@ -133,13 +134,58 @@ public class AmungusNormal extends AmongUs {
 			    			  vari++;
 			    		  }
 				    	  break;
-		      }
-		    	  
+		    	   }
+		      } */  
 		      
-		 }    
+		      verificaColisionBalas(tarro,balas,among,i);
+		      
 		 }     
 		return true;
 	}
+	
+	private void verificaColisionBalas(Jugador tarro,ArrayList<Proyectil> balas, Rectangle among, int id)
+	{
+	
+		for(int n=0;n<balas.size();n++)
+	      {
+	    	  
+	    	   Proyectil balaAux = balas.get(n);
+	    	   if(among.overlaps(balaAux.getArea())) {
+	    		   	  puntos+=100;
+			    	  posAmong.removeIndex(id);
+			    	  KillAmong.play();
+			    	  
+			    	  //metodo nuevo clase amongUs
+			    	  //si tiene hitbox(True) es la clase bullet
+			    	  //si si hitbox retorna (false) es la clase podercr7siu por lo que la bala no se destruye
+			    	  if(balaAux.hitBox())
+			    	  {
+			    		  balas.remove(n);
+			    		  if(poderCr7<5) {
+			    			  poderCr7++;}
+
+			    		  
+			    	  }
+			    	  //destruccion de la bala cuando sale de rango
+			    	  if(balaAux.posY()>300 && !balaAux.hitBox()) 
+			    	  {
+			    		  if(poderCr7<5) {
+			    			  poderCr7++;}
+			    		  
+			    		  balas.remove(n);
+			    	  }
+			    	  //si la cantidad de poder es igual a 5 suena muchas gracias aficion
+			    	  //valor de poderCr7 se modifica a 0 cuando se dispara
+			    	  if (poderCr7==5 && vari==0)
+		    		  {
+		    			  aficion.play();
+		    			  vari++;
+		    		  }
+			    	  break;
+	    	   }
+	      }   
+	}
+	
 	public void actualizarDibujoamungus(SpriteBatch batch) {
 		
 		
