@@ -10,12 +10,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class MainMenuScreen extends Pantalla implements Screen {
 
-	final GameLluviaMenu game;
+	final JuegoCr7 game;
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private OrthographicCamera camera;
 
-	public MainMenuScreen(final GameLluviaMenu game) {
+	public MainMenuScreen(final JuegoCr7 game) {
 		this.game = game;
         this.batch = game.getBatch();
         this.font = game.getFont();

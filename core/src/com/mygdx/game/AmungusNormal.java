@@ -73,7 +73,7 @@ public class AmungusNormal extends AmongUs {
 		
 	}
 
-	public boolean actualizarMovimiento(Tarro tarro,ArrayList<Proyectil> balas)
+	public boolean actualizarMovimiento(Jugador tarro,ArrayList<Proyectil> balas)
 	{
 		if(TimeUtils.millis() - ultimoAmong > 1000) CrearAmongus();
 		

@@ -37,7 +37,7 @@ public abstract class AmongUs {
      public void continuar() {
     	 AmongDrip.play();
      }	
-     public abstract boolean actualizarMovimiento(Tarro tarro,ArrayList<Proyectil> balas);
+     public abstract boolean actualizarMovimiento(Jugador tarro,ArrayList<Proyectil> balas);
      public abstract void actualizarDibujoamungus(SpriteBatch batch);
      
      

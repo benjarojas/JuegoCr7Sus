@@ -16,11 +16,11 @@ import StrategyCr7.Bullet;
 import StrategyCr7.Proyectil;
 
 public class GameScreen extends Pantalla implements Screen {
-	final GameLluviaMenu game;
+	final JuegoCr7 game;
     private OrthographicCamera camera;
 	private SpriteBatch batch;	   
 	private BitmapFont font;
-	private Tarro tarro;
+	private Jugador tarro;
 	//private Lluvia lluvia;
 	private AmungusNormal amungusazul;
 	private AmungusTirador amungusrojo;
@@ -33,14 +33,14 @@ public class GameScreen extends Pantalla implements Screen {
 	   
 	//boolean activo = true;
 
-	public GameScreen(final GameLluviaMenu game) {
+	public GameScreen(final JuegoCr7 game) {
 		this.game = game;
         this.batch = game.getBatch();
         this.font = game.getFont();
 		  // load the images for the droplet and the bucket, 64x64 pixels each 	     
 		  Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("mute.mp3"));
 		  Sound siu = Gdx.audio.newSound(Gdx.files.internal("cr7 siuuu sound.mp3"));//sonido nuevo siu
-		  tarro = new Tarro(new Texture(Gdx.files.internal("cristiano small.png")),new Texture(Gdx.files.internal("bola cristiano.png")),hurtSound,new Texture(Gdx.files.internal("balonOroSinBordes.png")),siu);
+		  tarro = new Jugador(new Texture(Gdx.files.internal("cristiano small.png")),new Texture(Gdx.files.internal("bola cristiano.png")),hurtSound,new Texture(Gdx.files.internal("balonOroSinBordes.png")),siu);
          
 	      // load the drop sound effect and the rain background "music" 
 	     Texture gota = new Texture(Gdx.files.internal("amongus blue.png"));

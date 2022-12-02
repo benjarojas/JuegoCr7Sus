@@ -8,16 +8,17 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import StrategyCr7.Bullet;
 import StrategyCr7.Cr7PoderSiu;
 import StrategyCr7.StrategyProyectil;
 
 
-public class Tarro implements Cristiano{
-	   private Rectangle bucket;
+public class Jugador {
+	   private Rectangle cristiano;
 	   private Sprite spr;
-	   private Texture bucketImage;
+	   private Texture playerImg;
 	   private Texture bulletTx;
 	   private Texture PoderCr7;
 	   private Sound sonidoHerido;
@@ -28,17 +29,19 @@ public class Tarro implements Cristiano{
 	   private int tiempoHeridoMax=50;
 	   private int tiempoHerido;
 	   private Sound Siuuuuuu;
+	   private long ultimaBala;
+	   private long cooldownDisparo;
 	   
 	   
 	   
-	   public Tarro(Texture tex, Texture txBala, Sound ss,Texture BalonOro,Sound siu) {
-		   bucketImage = tex;
+	   public Jugador(Texture tex, Texture txBala, Sound ss,Texture BalonOro,Sound siu) {
+		   playerImg = tex;
 		   sonidoHerido = ss;
 		   this.bulletTx = txBala;
 		   PoderCr7=BalonOro;
 		   Siuuuuuu=siu;
-		   
-		   
+		   ultimaBala = 0; 
+		   cooldownDisparo = 250; // cooldown por defecto (tiempo entre c/ disparo)
 	   }
 	   
 		public int getVidas() {
@@ -49,7 +52,7 @@ public class Tarro implements Cristiano{
 			return puntos;
 		}
 		public Rectangle getArea() {
-			return bucket;
+			return cristiano;
 		}
 		public void sumarPuntos(int pp) {
 			puntos+=pp;
@@ -57,42 +60,51 @@ public class Tarro implements Cristiano{
 		
 	
 	   public void crear() {
-		      bucket = new Rectangle();
-		      bucket.x = 800 / 2 - 45 / 2;
-		      bucket.y = 5;
-		      bucket.width = 45;
-		      bucket.height = 64;
+		      cristiano = new Rectangle();
+		      cristiano.x = 800 / 2 - 45 / 2;
+		      cristiano.y = 5;
+		      cristiano.width = 45;
+		      cristiano.height = 64;
 	   }
+	   
 	   public void dañar() {
 		  vidas--;
 		  herido = true;
 		  tiempoHerido=tiempoHeridoMax;
 		  sonidoHerido.play();
 	   }
+	   
 	   public void dibujar(SpriteBatch batch, GameScreen game,AmungusNormal b) {
 		   StrategyProyectil stra= new StrategyProyectil();//Strategy 
 		   if (!herido)  
-			   batch.draw(bucketImage, bucket.x, bucket.y);
+			   batch.draw(playerImg, cristiano.x, cristiano.y);
 		   else {
-		       batch.draw(bucketImage, bucket.x, bucket.y+ MathUtils.random(-5,5));
+		       batch.draw(playerImg, cristiano.x, cristiano.y+ MathUtils.random(-5,5));
 		       tiempoHerido--;
 		       if (tiempoHerido<=0) herido = false;
 		   }
 		   if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {   
 			   
-			   //Bullet bala = new Bullet(bucket.getX()+bucket.getWidth()/2-3,bucket.getY()+ bucket.getHeight()-3,0,3,bulletTx);
+			   //Bullet bala = new Bullet(cristiano.getX()+cristiano.getWidth()/2-3,cristiano.getY()+ cristiano.getHeight()-3,0,3,bulletTx);
 			   //game.agregarBala(bala);
-			   //stra.setProyectil(new Cr7PoderSiu(bucket.getX()+bucket.getWidth()/2-3,bucket.getY()+ bucket.getHeight()-3,0,3,PoderCr7));
-			   stra.setProyectil(new Bullet(bucket.getX()+bucket.getWidth()/2-3,bucket.getY()+ bucket.getHeight()-3,0,3,bulletTx));
-			   game.agregarBala(stra.tipoBala());
+			   //stra.setProyectil(new Cr7PoderSiu(cristiano.getX()+cristiano.getWidth()/2-3,cristiano.getY()+ cristiano.getHeight()-3,0,3,PoderCr7));
+			   
+			   // verificamos que hayan pasado a lo menos x milisegundos antes de poder disparar nuevamente
+			   // para evitar spameo de disparos
+			   if(TimeUtils.millis() - ultimaBala >= cooldownDisparo)
+			   {
+				   stra.setProyectil(new Bullet(cristiano.getX()+cristiano.getWidth()/2-3,cristiano.getY()+ cristiano.getHeight()-3,0,3,bulletTx));
+				   game.agregarBala(stra.tipoBala());
+				   ultimaBala = TimeUtils.millis();
+			   }
 			   
 			   //soundBala.play();
 		   }
 		   //condicion nueva, si apreta z se activa poder especial si este es igual a 5
 		   if (Gdx.input.isKeyJustPressed(Input.Keys.Z) && b.getPuntosPoder()==5) {  
 			   
-			   stra.setProyectil(new Cr7PoderSiu(bucket.getX()+bucket.getWidth()/2-45,bucket.getY()+ bucket.getHeight()-3,0,3,PoderCr7));
-			   //stra.setProyectil(new Bullet(bucket.getX()+bucket.getWidth()/2-3,bucket.getY()+ bucket.getHeight()-3,0,3,bulletTx));
+			   stra.setProyectil(new Cr7PoderSiu(cristiano.getX()+cristiano.getWidth()/2-45,cristiano.getY()+ cristiano.getHeight()-3,0,3,PoderCr7));
+			   //stra.setProyectil(new Bullet(cristiano.getX()+cristiano.getWidth()/2-3,cristiano.getY()+ cristiano.getHeight()-3,0,3,bulletTx));
 			   game.agregarBala(stra.tipoBala());
 			   Siuuuuuu.play();
 			   b.setPuntosPoder(0);//resetea el contador de poderCr7 de la clase amungusnormal 
@@ -107,21 +119,18 @@ public class Tarro implements Cristiano{
 			      Vector3 touchPos = new Vector3();
 			      touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			      camera.unproject(touchPos);
-			      bucket.x = touchPos.x - 64 / 2;
+			      cristiano.x = touchPos.x - 64 / 2;
 			}*/
 		   //movimiento desde teclado
-		   if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) bucket.x -= velx * Gdx.graphics.getDeltaTime();
-		   if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) bucket.x += velx * Gdx.graphics.getDeltaTime();
+		   if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) cristiano.x -= velx * Gdx.graphics.getDeltaTime();
+		   if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) cristiano.x += velx * Gdx.graphics.getDeltaTime();
 		   // que no se salga de los bordes izq y der
-		   if(bucket.x < 0) bucket.x = 0;
-		   if(bucket.x > 800 - 45) bucket.x = 800 - 45;
+		   if(cristiano.x < 0) cristiano.x = 0;
+		   if(cristiano.x > 800 - 45) cristiano.x = 800 - 45;
 	   }
 	    
-	   
-	
-
 	public void destruir() {
-		    bucketImage.dispose();
+		    playerImg.dispose();
 	   }
 	
    public boolean estaHerido() {
