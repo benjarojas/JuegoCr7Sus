@@ -30,6 +30,7 @@ public class AmungusTirador extends AmongUs {
 		texBala=bala;//textura bala 
 		
 	}
+	
 	public void Crear()
 	{
 		posAmong = new Array<Rectangle>();
@@ -45,6 +46,7 @@ public class AmungusTirador extends AmongUs {
 	{
 		return puntos;
 	}
+	
 	public void CrearAmongus()
 	{
 		int x,y;
@@ -155,21 +157,12 @@ public class AmungusTirador extends AmongUs {
 				    		  balas.remove(n);}
 				    	  
 				    	  break;
+		    	   }
 		      }
-		     
-		        
-		      
-		         
-		      
-		    	  
-		      
 		 }
-		
-		 
-		 }
-		      
 		return true;
 	}
+	
 	public void actualizarDibujoamungus(SpriteBatch batch) {
 		
 		 for (int i=0; i < posBala.size; i++ ) {

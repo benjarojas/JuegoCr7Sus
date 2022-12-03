@@ -76,10 +76,12 @@ public class Jugador {
 		  tiempoHerido=tiempoHeridoMax;
 		  sonidoHerido.play();
 	   }
+	   
 	   public void curar()
 	   {
 		   vidas++;
 	   }
+	   
 	   public void setPuntosPotenciador(int puntosPoder)
 	   {
 		   puntosPotenciador=puntosPoder;

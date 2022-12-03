@@ -17,7 +17,7 @@ public class StrategyPotenciador {
     {
     	potenciador.CrearPotenciador();
     }
-    public  void Crear()
+    public void Crear()
     {
     	potenciador.Crear();
     }

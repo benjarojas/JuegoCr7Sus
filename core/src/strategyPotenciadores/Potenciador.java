@@ -15,7 +15,5 @@ public interface Potenciador {
 	    public  void Crear();
 	    public  boolean actualizarMovimiento(Jugador tarro,ArrayList<Proyectil> balas);
 	    public  void actualizarDibujoPotenciador(SpriteBatch batch);
-	
-	
 
 }

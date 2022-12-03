@@ -28,19 +28,23 @@ public class GameScreen extends Pantalla implements Screen {
 	private AmungusTirador amungusrojo;
 	private StrategyPotenciador potenciador;
 	private ArrayList<Proyectil> balas = new ArrayList<>();
-	
-	   
+	private Director director;
+	private ScreenBuilder builder;
 	
 	public GameScreen(final JuegoCr7 game) {
 		this.game = game;
         this.batch = game.getBatch();
         this.font = game.getFont();
-		  // load the images for the droplet and the bucket, 64x64 pixels each 	     
+        
+        director = new Director();
+		builder = new ScreenBuilder();
+        
+		  // load the images for player and its bullets, 64x64 pixels each 	     
 		  Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("mute.mp3"));
 		  Sound siu = Gdx.audio.newSound(Gdx.files.internal("cr7 siuuu sound.mp3"));//sonido nuevo siu
 		  tarro = new Jugador(new Texture(Gdx.files.internal("cristiano small.png")),new Texture(Gdx.files.internal("bola cristiano.png")),hurtSound,new Texture(Gdx.files.internal("balonOroSinBordes.png")),siu);
          
-	      // load the drop sound effect and the rain background "music" 
+	      // load sound effects and the background musicm 
 	     Texture gota = new Texture(Gdx.files.internal("amongus blue.png"));
 	     Texture gotaMala = new Texture(Gdx.files.internal("amongus tirador.png"));
          Texture bala = new Texture(Gdx.files.internal("Rocket2.png"));
@@ -86,7 +90,8 @@ public class GameScreen extends Pantalla implements Screen {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float delta) {	
+		
 		//limpia la pantalla con color azul obscuro.
 		ScreenUtils.clear(0, 0, 0.2f, 1);
 		//actualizar matrices de la cámara
@@ -115,21 +120,27 @@ public class GameScreen extends Pantalla implements Screen {
 	    	  if (game.getHigherScore()<amungusrojo.getPuntos())
 	    		  game.setHigherScore(amungusrojo.getPuntos()+amungusazul.getPuntos());  
 	    	  //ir a la ventana de finde juego y destruir la actual
-	    	  game.setScreen(new GameOverScreen(game));
+	    	  director.constructGameOverScreen(builder, game);
+	  		  GeneralScreen pantallaGameOver = this.builder.getResult();	
+	    	  game.setScreen(pantallaGameOver);
 	    	  dispose();
 	       } 
 	       if (!amungusazul.actualizarMovimiento(tarro,balas)) {
 		    	  //actualizar HigherScore
 		    	  
 		    	  //ir a la ventana de finde juego y destruir la actual
-		    	  game.setScreen(new GameOverScreen(game));
+	    	   	director.constructGameOverScreen(builder, game);
+		  		  GeneralScreen pantallaGameOver = this.builder.getResult();	
+		    	  game.setScreen(pantallaGameOver);
 		    	  dispose();
 		   }
 	       if (!potenciador.actualizarMovimiento(tarro,balas)) {
 		    	  //actualizar HigherScore
 		    	  
 		    	  //ir a la ventana de finde juego y destruir la actual
-		    	  game.setScreen(new GameOverScreen(game));
+	    	   	  director.constructGameOverScreen(builder, game);
+		  		  GeneralScreen pantallaGameOver = this.builder.getResult();	
+		    	  game.setScreen(pantallaGameOver);
 		    	  dispose();
 		   }
 		}
@@ -175,7 +186,9 @@ public class GameScreen extends Pantalla implements Screen {
 	public void pause() {
 		amungusazul.pausar();
 		amungusrojo.pausar();
-		game.setScreen(new PausaScreen(game, this)); 
+		director.constructPauseScreen(builder, game);
+		GeneralScreen pantallaPausa = builder.getResult();	
+		game.setScreen(pantallaPausa); 
 	}
 
 	@Override

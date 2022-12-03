@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-public abstract class  Proyectil {
+public abstract class Proyectil {
 	protected int xSpeed;
 	protected int ySpeed;
 	protected boolean destroyed = false;

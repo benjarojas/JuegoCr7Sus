@@ -7,38 +7,39 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-
-public class PausaScreen extends Pantalla implements Screen {
+public class GeneralScreen implements Screen {
 
 	private final JuegoCr7 game;
 	private GameScreen juego;
 	private SpriteBatch batch;	   
 	private BitmapFont font;
 	private OrthographicCamera camera;
-
-	public PausaScreen (final JuegoCr7 game, GameScreen juego) {
+	private String msg1;
+	private String msg2;
+	
+	public GeneralScreen(final JuegoCr7 game, GameScreen juego, String msg1, String msg2) {
 		this.game = game;
         this.juego = juego;
         this.batch = game.getBatch();
         this.font = game.getFont();
+        this.msg1 = msg1;
+        this.msg2 = msg2;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 	}
-
-	@Override
+	
 	public void render(float delta) {
-		ScreenUtils.clear(0, 0, 1.0f, 0.5f);
-
+		ScreenUtils.clear(0, 0, 0.2f, 1);
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
-		font.draw(batch, "Juego en Pausa ", 100, 150);
-		font.draw(batch, "Toca en cualquier lado para continuar !!!", 100, 100);
+		font.draw(batch, msg1, 100, 200);
+		font.draw(batch, msg2, 100, 100);
 		batch.end();
 
 		if (Gdx.input.isTouched()) {
-			game.setScreen(juego);
+			game.setScreen(new GameScreen(game));
 			dispose();
 		}
 	}
@@ -80,4 +81,3 @@ public class PausaScreen extends Pantalla implements Screen {
 	}
 
 }
-

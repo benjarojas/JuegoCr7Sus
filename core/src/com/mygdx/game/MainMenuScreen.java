@@ -14,16 +14,19 @@ public class MainMenuScreen extends Pantalla implements Screen {
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private OrthographicCamera camera;
-	private static MainMenuScreen mainmenu;//agregar esto
+	private static MainMenuScreen mainmenu;
 
-	private MainMenuScreen(final JuegoCr7 game) {//private en vez de public
+	// Constructor privado, parte del patrón Singleton
+	private MainMenuScreen(final JuegoCr7 game)
+	{
 		this.game = game;
         this.batch = game.getBatch();
         this.font = game.getFont();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 	}
-	//todo este metodo
+
+	// Con este método obtenemos la referencia al objeto instanciado (Singleton)
 	public static MainMenuScreen getSingletonInstance(final JuegoCr7 game)
 	{
 		if(mainmenu==null)
