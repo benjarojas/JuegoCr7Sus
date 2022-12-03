@@ -12,6 +12,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import builder.Director;
+import builder.GeneralScreen;
+import builder.ScreenBuilder;
 import strategyPotenciadores.Carga;
 import strategyPotenciadores.Potenciador;
 import strategyPotenciadores.StrategyPotenciador;

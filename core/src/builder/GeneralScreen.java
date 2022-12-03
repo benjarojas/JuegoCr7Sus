@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package builder;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.GameScreen;
+import com.mygdx.game.JuegoCr7;
 
 public class GeneralScreen implements Screen {
 

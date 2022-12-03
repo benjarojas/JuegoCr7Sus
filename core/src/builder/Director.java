@@ -1,4 +1,6 @@
-package com.mygdx.game;
+package builder;
+
+import com.mygdx.game.JuegoCr7;
 
 public class Director {
 

@@ -1,4 +1,7 @@
-package com.mygdx.game;
+package builder;
+
+import com.mygdx.game.GameScreen;
+import com.mygdx.game.JuegoCr7;
 
 public interface Builder {
 	void setGame(JuegoCr7 game);
